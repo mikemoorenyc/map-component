@@ -79,11 +79,11 @@ var PointList = React.createClass({
           savedPoint = false;
       var classpoint = 'pointHolder';
       if(point.editing == true) {
-        formRender = <PointForm title={point.title} editBubble={this.props.editBubble} newPoint={point.newPoint} id={point.id} onDelete={this.props.deleteBubble} saveNewPoint={this.props.updateBubble}/>;
+        formRender = <PointForm cat={point.cat} title={point.title} lat={point.lat} lng={point.lng} editBubble={this.props.editBubble} newPoint={point.newPoint} id={point.id} onDelete={this.props.deleteBubble} saveNewPoint={this.props.updateBubble}/>;
         classpoint = 'pointHolder currently-editing';
       }
       if(point.title !=false) {
-        savedPoint = <Point editBubble={this.props.editBubble} title={point.title} id={point.id} editing={point.editing} newPoint={point.newPoint}/>;
+        savedPoint = <Point editBubble={this.props.editBubble} cat={point.cat} title={point.title} id={point.id} editing={point.editing} newPoint={point.newPoint}/>;
       }
       return (
         <div key={point.id} className={classpoint}>
@@ -104,26 +104,78 @@ var PointList = React.createClass({
 
 var PointForm = React.createClass({
   getInitialState: function() {
+    if(!(this.props.lat)) {
+      var lat = 40.7067279;
+    } else {
+      var lat = this.props.lat;
+    }
+    if(!(this.props.lng)) {
+      var lng = -74.0397625;
+    } else {
+      var lng = this.props.lng;
+    }
+    if(!(this.props.cat)) {
+      var cat = 'retail';
+    } else {
+      var cat = this.props.cat;
+    }
     return {
-      title: this.props.title
+      title: this.props.title,
+      lat: lat,
+      lng: lng,
+      cat: cat
     }
   },
 
   componentDidMount: function() {
-    var $inner = $('<div style="width: 100%; height:500px"></div>').appendTo('#map-container');
-    var center = new google.maps.LatLng(40.7067279,-74.0397625);
-      var mapOptions = {
-        zoom: 10,
-        center: center,
-        disableDefaultUI: true,
-        zoomControl: true
-      };
+    var initialCenter = new google.maps.LatLng(this.state.lat,this.state.lng);
+    $('#map-container').append($('#theMap'));
+    google.maps.event.trigger(map,'resize');
+    map.setCenter(initialCenter);
+    map.setZoom(13);
+    marker.setPosition(initialCenter);
 
-  var map = new google.maps.Map($inner[0],
-  mapOptions);
+    //SET MARKER DRAG LISTENER\
+    google.maps.event.addListener(marker, 'dragend', function() {
+      this.updateCenter(marker.getPosition().lat(),marker.getPosition().lng());
+    }.bind(this) );
+
+    //ON MAP CLICK
+    google.maps.event.addListener(map, 'click', function(event) {
+
+      this.updateCenter(event.latLng.lat(),event.latLng.lng());
+    }.bind(this));
+
+    //Places search
+    searchBox.addListener('places_changed', function() {
+      $('#search-input').val('');
+      var places = searchBox.getPlaces();
+      if (places.length == 0) {
+        return;
+      }
+      var point = places[0];
+      this.updateCenter(point.geometry.location.lat(), point.geometry.location.lng());
+    }.bind(this));
+  },
+  updateCenter(lat,lng) {
+    map.panTo({
+      lat:lat,
+      lng:lng
+    });
+    marker.setPosition({
+      lat:lat,
+      lng:lng
+    });
+    this.setState({
+      lat: lat,
+      lng: lng
+    })
   },
   componentWillUnmount: function() {
-    $('#map-container > div').remove();
+    google.maps.event.clearListeners(marker, 'dragend');
+    google.maps.event.clearListeners(searchBox, 'places_changed');
+    google.maps.event.clearListeners(map, 'click');
+    $("#gmap-container").append($('#theMap'));
   },
   cancelClick: function() {
     if(this.props.newPoint == true) {
@@ -135,12 +187,18 @@ var PointForm = React.createClass({
   titleChange: function(e) {
     this.setState({title: e.target.value});
   },
+  catChange: function(e) {
+    this.setState({cat: e.target.value});
+  },
   subClick: function() {
 
       this.props.saveNewPoint(
         {
           title: this.state.title,
-          id: this.props.id
+          id: this.props.id,
+          lat: this.state.lat,
+          lng: this.state.lng,
+          cat: this.state.cat
         }
       );
 
@@ -164,9 +222,18 @@ var PointForm = React.createClass({
     if(this.state.title == false) {
       disabledState =true;
     }
+    var catOpts= mapCategories.map(function(cat) {
+      return (
+        <option value={cat.slug} key={cat.slug} dangerouslySetInnerHTML={{__html:cat.title}}></option>
+      );
+    }.bind(this));
     return (
       <div className="PointForm">
       <input type="text" value={this.state.title} onChange={this.titleChange} />
+      <br />
+      <select defaultValue={this.props.cat} onChange={this.catChange}>
+      {catOpts}
+      </select>
       <div id="map-container"></div>
       <div className="FormFooter">
         {deleteState}
@@ -184,9 +251,15 @@ var Point = React.createClass({
     this.props.editBubble(this.props.id, true);
   },
   render: function() {
+    var theColor = 'transparent';
 
+    $(mapCategories).each(function(index,e){
+      if(this.props.cat == e.slug) {
+         theColor = e.color;
+      }
+    }.bind(this));
     return (
-      <div className="Point">
+      <div className="Point" style={{background: theColor}}>
       <div className="title">{this.props.title} <button className="edit" onClick={this.editSet}>Edit</button></div>
 
       </div>

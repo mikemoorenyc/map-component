@@ -11,15 +11,85 @@
     <link href="base-styles.css" rel="stylesheet">
   </head>
   <body>
-    this is a test 
-    You Need TO MAKE THE MAP AND THEN JUST KEEP MOVING IT AROUND.<br/>
-    MOVE ALL INSTANCE LISTENERS OUT OF REACT
+<h3>Still to do</h3>
+<ul>
+  <li>Figure out category grouping</li>
+  <li>Drag &amp; Drop
+      <ul>
+        <li>http://webcloud.se/sortable-list-component-react-js/</li>
+        <li>Make sure you you can drop over wrong cat</li>
+        <li>http://webcloud.se/truly-reactive-sortable-component/</li>
+      </ul>
+    </li>
+  </ul>
     <div id="map-component"></div>
+    <div id="gmap-container"style="display:none;">
+      <div id="theMap" >
+        <div id="mapConnector" style="position:absolute; left: 0; top:0; width:100%; height:100%;"></div>
+
+        <div id="search-holder">
+          <input type="text" id="search-input" placeholder="Search for a place or address..." />
+        </div>
+
+      </div>
+
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=places"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script>
+
+    var mapCategories = [
+      {
+        slug: 'retail',
+        title: "Retail",
+        color: 'red'
+      },
+      {
+        slug: 'hotelsclubs',
+        title: 'Hotels &amp; Clubs',
+        color: 'blue'
+      }
+    ];
+
+    var center = new google.maps.LatLng(40.7067279,-74.0397625);
+      var mapOptions = {
+        zoom: 13,
+        center: center,
+        disableDefaultUI: true,
+        zoomControl: true
+      };
+
+  var map = new google.maps.Map(document.getElementById('mapConnector'),
+  mapOptions);
+
+  var searchBox = new google.maps.places.SearchBox(document.getElementById('search-input'));
+
+  // Bias the SearchBox results towards current map's viewport.
+  map.addListener('bounds_changed', function() {
+    searchBox.setBounds(map.getBounds());
+  });
+
+
+
+  $( "#search-input" ).keydown(function(event){
+    if (event.keyCode == 13) {
+    //  searchFetcher();
+      return false;
+    }
+
+  });
+
+  var marker = new google.maps.Marker({
+    position: center,
+    map: map,
+    draggable:true,
+    title:"Drag me!"
+});
+
+    </script>
     <script src="build/app.js"></script>
   </body>
 </html>
