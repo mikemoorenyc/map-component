@@ -15,7 +15,8 @@ var MapComponent = React.createClass({
         id: new Date(),
         title:'',
         editing: true,
-        newPoint: true
+        newPoint: true,
+        cat: false
       }
     ]);
     this.setState({points: newPoints});
@@ -74,7 +75,25 @@ var MapComponent = React.createClass({
 var PointList = React.createClass({
 
   render: function() {
-    var pointNodes = this.props.data.map(function(point) {
+    var unsorted = this.props.data;
+    //CATEGORY GROUPING
+    var grouped = [];
+    $(mapCategories).each(function(index,e){
+      var cat = e.slug;
+      $(unsorted).each(function(index,e){
+        if(e.cat == cat) {
+          grouped.push(e);
+        }
+      });
+    });
+    //ADD IN NEW ONE
+    $(unsorted).each(function(index,e){
+      if(e.cat === false) {
+        grouped.push(e);
+      }
+    });
+
+    var pointNodes = grouped.map(function(point) {
       var formRender = false,
           savedPoint = false;
       var classpoint = 'pointHolder';
