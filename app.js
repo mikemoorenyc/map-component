@@ -4,7 +4,24 @@ var MapComponent = React.createClass({
    return {
      currentlyEditing: false,
      points: [],
-     categories: []
+     categories: [
+       {
+         id: 1,
+         name: 'Test 1',
+         color: '#cc0000',
+       },
+       {
+         id: 2,
+         name: 'Test 2',
+         color: '#00cc00',
+       },
+       {
+         id:3,
+         name: 'Test 3',
+         color: '#0000cc'
+       }
+
+     ]
    };
   },
   idGenerator(items) {
@@ -27,7 +44,7 @@ var MapComponent = React.createClass({
     var currentPoints = this.state.points;
     var newPoints = currentPoints.concat([
       {
-        id: new Date(),
+        id: this.idGenerator(currentPoints),
         title:'',
         editing: true,
         newPoint: true,
@@ -52,9 +69,15 @@ var MapComponent = React.createClass({
     this.setState({categories: newCats});
 
   },
-  deleteAPoint: function(badid) {
-    var currentPoints = this.state.points;
-    var filteredPoints = currentPoints.filter(function (el) {
+  deletePoint: function(badid, saved) {
+    if(saved) {
+      var confirmed = confirm("Are you sure you want to delete this map point? This can't be undone.");
+      if(!confirmed) {
+        return;
+      }
+    }
+    var currentCats = this.state.points;
+    var filteredPoints = currentCats.filter(function (el) {
                       return el.id !== badid;
                  });
 
@@ -114,6 +137,11 @@ var MapComponent = React.createClass({
     });
     this.setState({points:currentPoints});
   },
+  updateCat: function(newOrder) {
+    this.setState({
+      categories: newOrder
+    });
+  },
   render: function() {
     var scaffold;
     var editState = false;
@@ -126,8 +154,8 @@ var MapComponent = React.createClass({
       scaffold = <div className="emptyState"><button onClick={this.addACat}>Click here to add your first category.</button></div>;
     } else {
       scaffold = <div className="clearfix">
-
-                    <CatList deleteCat={this.deleteCat} newCat={this.addACat} editState={editState} saveCat={this.setCat} cat={this.state.categories}/>
+                    <PointList savePoint={this.updatePoint} addAPoint={this.addAPoint} deletePoint={this.deletePoint} points={this.state.points} categories={this.state.categories} editState={editState}/>
+                    <CatList updateCat={this.updateCat} deleteCat={this.deleteCat} newCat={this.addACat} editState={editState} saveCat={this.setCat} cat={this.state.categories}/>
                   </div>;
     }
     var serialized = JSON.stringify(this.state.points);
@@ -205,7 +233,7 @@ var PointList = React.createClass({
 });
 */
 
-
+/*
 var PointForm = React.createClass({
   getInitialState: function() {
     if(!(this.props.lat)) {
@@ -349,6 +377,7 @@ var PointForm = React.createClass({
     );
   }
 });
+*/
 
 var Point = React.createClass({
   editSet: function() {

@@ -35,11 +35,14 @@
       </div>
 
     </div>
+    <div id="cat-placeholder"></div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=places"></script>
     <script type="text/javascript" src="spectrum.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script>
 
@@ -96,7 +99,11 @@
     title:"Drag me!"
 });
 
+var placeholder = document.createElement("div");
+placeholder.className = 'cat-placeholder';
+
     </script>
+    <script src="react-sort.js"></script>
     <script src="build/build.js"></script>
   </body>
 </html>
