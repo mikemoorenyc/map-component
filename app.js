@@ -3,8 +3,23 @@ var MapComponent = React.createClass({
   getInitialState: function() {
    return {
      currentlyEditing: false,
-     points: []
+     points: [],
+     categories: []
    };
+  },
+  idGenerator(items) {
+    var newID = 1;
+    if(items.length > 0) {
+      var highNum = 0;
+
+      $(items).each(function(index, e){
+        if(e.id > highNum) {
+          highNum = e.id;
+        }
+      });
+      newID = highNum+1;
+    }
+    return newID;
   },
   addAPoint: function(e) {
     e.preventDefault();
@@ -21,6 +36,22 @@ var MapComponent = React.createClass({
     ]);
     this.setState({points: newPoints});
   },
+  addACat: function(e) {
+
+    e.preventDefault();
+    var currentCats = this.state.categories;
+    var newCats = currentCats.concat([
+      {
+        id: this.idGenerator(currentCats),
+        name:'',
+        color: '#cc0000',
+        editing: true,
+        newCat: true
+      }
+    ]);
+    this.setState({categories: newCats});
+
+  },
   deleteAPoint: function(badid) {
     var currentPoints = this.state.points;
     var filteredPoints = currentPoints.filter(function (el) {
@@ -28,6 +59,41 @@ var MapComponent = React.createClass({
                  });
 
     this.setState({points: filteredPoints});
+  },
+  deleteCat: function(badid, saved) {
+
+    if(saved) {
+      var cancel;
+      $(this.state.points).each(function(index,e){
+        if(e.catID == badid) {
+          alert("Sorry. You can't delete this category because some map points are using it. Delete those points or change their category.");
+          cancel = true;
+        }
+      });
+      if(cancel) {
+        return;
+      }
+      var confirmed = confirm("Are you sure you want to delete this category? This can't be undone.");
+      if(!confirmed) {
+        return;
+      }
+    }
+    var currentCats = this.state.categories;
+    var filteredPoints = currentCats.filter(function (el) {
+                      return el.id !== badid;
+                 });
+
+    this.setState({categories: filteredPoints});
+  },
+  setCat: function(point) {
+
+    var currentPoints = this.state.categories;
+    $(currentPoints).each(function(index, e){
+      if(e.id == point.id) {
+        currentPoints[index] = point;
+      }
+    });
+    this.setState({categories:currentPoints});
   },
   updatePoint: function(point) {
 
@@ -49,32 +115,47 @@ var MapComponent = React.createClass({
     this.setState({points:currentPoints});
   },
   render: function() {
-    var serialized = JSON.stringify(this.state.points);
+    var scaffold;
     var editState = false;
-    $(this.state.points).each(function(index,e){
+    $(this.state.points.concat(this.state.categories)).each(function(index,e){
       if(e.editing == true) {
         editState = true;
       }
     });
+    if(this.state.categories.length < 1) {
+      scaffold = <div className="emptyState"><button onClick={this.addACat}>Click here to add your first category.</button></div>;
+    } else {
+      scaffold = <div className="clearfix">
+
+                    <CatList deleteCat={this.deleteCat} newCat={this.addACat} editState={editState} saveCat={this.setCat} cat={this.state.categories}/>
+                  </div>;
+    }
+    var serialized = JSON.stringify(this.state.points);
+    var cat_serialized = JSON.stringify(this.state.categories);
+
     var mainClass = 'mapComponent';
     var addButton = <button onClick={this.addAPoint}>Add a point</button>;
     if(editState == true) {
       mainClass = 'mapComponent currently-editing';
       addButton = false;
     }
+    //<PointList data={this.state.points} editBubble={this.editSet} deleteBubble={this.deleteAPoint} updateBubble={this.updatePoint} />
+    //{addButton}
     return (
       <div className={mainClass}>
         <input type="hidden" name="map_data" id="map_data" value={serialized} />
-        <PointList data={this.state.points} editBubble={this.editSet} deleteBubble={this.deleteAPoint} updateBubble={this.updatePoint} />
-        {addButton}
+        <input type="hidden" name="map_cats" id="map_cats" value={cat_serialized} />
+
+        {scaffold}
       </div>
     );
   }
 });
-
+/*
 var PointList = React.createClass({
 
   render: function() {
+
     var unsorted = this.props.data;
     //CATEGORY GROUPING
     var grouped = [];
@@ -94,6 +175,10 @@ var PointList = React.createClass({
     });
 
     var pointNodes = grouped.map(function(point) {
+
+
+    var pointNodes = this.props.data.map(function(point) {
+
       var formRender = false,
           savedPoint = false;
       var classpoint = 'pointHolder';
@@ -118,7 +203,7 @@ var PointList = React.createClass({
     );
   }
 });
-
+*/
 
 
 var PointForm = React.createClass({
