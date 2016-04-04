@@ -60,17 +60,18 @@ var MapComponent = React.createClass({
     this.setState({points: filteredPoints});
   },
   deleteCat: function(badid, saved) {
-    var cancel;
-    $(this.states.points).each(function(index,e){
-      if(e.catID == badid) {
-        alert("Sorry. You can't delete this category because some map points are using it. Delete those points or change their category.");
-        cancel = true;
-      }
-    });
-    if(cancel) {
-      return;
-    }
+
     if(saved) {
+      var cancel;
+      $(this.state.points).each(function(index,e){
+        if(e.catID == badid) {
+          alert("Sorry. You can't delete this category because some map points are using it. Delete those points or change their category.");
+          cancel = true;
+        }
+      });
+      if(cancel) {
+        return;
+      }
       var confirmed = confirm("Are you sure you want to delete this category? This can't be undone.");
       if(!confirmed) {
         return;
