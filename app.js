@@ -24,7 +24,7 @@ var MapComponent = React.createClass({
      ]
    };
   },
-  idGenerator(items) {
+  idGenerator: function(items) {
     var newID = 1;
     if(items.length > 0) {
       var highNum = 0;
@@ -85,15 +85,16 @@ var MapComponent = React.createClass({
   },
   deleteCat: function(badid, saved) {
 
-    if(saved) {
+    if(saved === true) {
       var cancel;
       $(this.state.points).each(function(index,e){
-        if(e.catID == badid) {
-          alert("Sorry. You can't delete this category because some map points are using it. Delete those points or change their category.");
+        if(e.cat == badid) {
+
           cancel = true;
         }
       });
       if(cancel) {
+        alert("Sorry. You can't delete this category because some map points are using it. Delete those points or change their category.");
         return;
       }
       var confirmed = confirm("Are you sure you want to delete this category? This can't be undone.");
@@ -142,6 +143,11 @@ var MapComponent = React.createClass({
       categories: newOrder
     });
   },
+  sortPoints: function(newOrder) {
+    this.setState({
+      points: newOrder
+    });
+  },
   render: function() {
     var scaffold;
     var editState = false;
@@ -154,7 +160,7 @@ var MapComponent = React.createClass({
       scaffold = <div className="emptyState"><button onClick={this.addACat}>Click here to add your first category.</button></div>;
     } else {
       scaffold = <div className="clearfix">
-                    <PointList savePoint={this.updatePoint} addAPoint={this.addAPoint} deletePoint={this.deletePoint} points={this.state.points} categories={this.state.categories} editState={editState}/>
+                    <PointList savePoint={this.updatePoint} addAPoint={this.addAPoint} deletePoint={this.deletePoint} points={this.state.points} categories={this.state.categories} editState={editState} sortPoints={this.sortPoints}/>
                     <CatList updateCat={this.updateCat} deleteCat={this.deleteCat} newCat={this.addACat} editState={editState} saveCat={this.setCat} cat={this.state.categories}/>
                   </div>;
     }

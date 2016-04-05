@@ -1,16 +1,4 @@
 var PointList = React.createClass({
-  getInitialState: function() {
-    return {
-      points: this.props.points
-    }
-  },
-  componentWillReceiveProps: function(nextProps) {
-
-
-    this.setState({
-      points: nextProps.points
-    });
-  },
   render: function() {
     if(this.props.points < 1) {
       return (
@@ -24,7 +12,36 @@ var PointList = React.createClass({
     if(this.props.editState) {
       addButton = false;
     }
+    //MAKE CATEGORY BLOCK ARRAY
+    var categoryBlocks = [];
+    $(this.props.categories).each(function(index,e){
+      var category = e;
+      var catObject = {
+        id: category.id,
+        points: []
+      }
+      var pointArray = []
+      $(this.props.points).each(function(index,e){
+
+        var point = e;
+
+        if(point.cat == category.id) {
+
+          point.color = category.color;
+          pointArray.push(point);
+
+        }
+      }.bind(this));
+      catObject.points = pointArray;
+      //console.log(catObject);
+      categoryBlocks.push(catObject);
+    }.bind(this));
+
+    var pointList = categoryBlocks.map(function(block){
+      return <PointCategoryBlock categories={this.props.categories} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} points={block.points} id={block.id} key={block.id} categoryBlocks={categoryBlocks} updatePoints={this.props.sortPoints}/>
+    }.bind(this))
     //GROUP BY CATEGORY
+    /*
     var grouped = [];
 
 
@@ -48,7 +65,7 @@ var PointList = React.createClass({
         grouped.push(e);
       }
     }.bind(this));
-    console.log(grouped);
+
 
     var pointList = grouped.map(function(cat) {
 
@@ -65,7 +82,7 @@ var PointList = React.createClass({
           background: '#ececec'
         }
         mainCat = 'categoryItem currently-editing';
-        catForm = <PointForm title={cat.title} newPoint={cat.newPoint} cat={cat.cat} id={cat.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/>
+        catForm = <PointForm title={cat.title} lat={cat.lat} lng={cat.lng} newPoint={cat.newPoint} cat={cat.cat} id={cat.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/>
       }
       if(cat.title && !cat.editing) {
         saveCat = <PointItem savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} id={cat.id} cat={cat.cat} lat={cat.lat} lng={cat.lng} title={cat.title} />
@@ -78,56 +95,24 @@ var PointList = React.createClass({
         </div>
       );
     }.bind(this));
+    */
+    var newPointItem = false;
+    $(this.props.points).each(function(index,e){
+      if(e.cat === false) {
+        newPointItem = <div className="pointItem currently-editing" style={{background: '#ececec'}}><PointForm title={e.title} lat={e.lat} lng={e.lng} newPoint={e.newPoint} cat={this.props.categories[0].id} id={e.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/></div>
+      }
+    }.bind(this))
 
 
 
     return (
       <div className="points-component">
       {pointList}
+      {newPointItem}
       {addButton}
       </div>
     )
-    /*
-    var unsorted = this.props.data;
-    //CATEGORY GROUPING
-    var grouped = [];
-    $(mapCategories).each(function(index,e){
-      var cat = e.slug;
-      $(unsorted).each(function(index,e){
-        if(e.cat == cat) {
-          grouped.push(e);
-        }
-      });
-    });
-    //ADD IN NEW ONE
-    $(unsorted).each(function(index,e){
-      if(e.cat === false) {
-        grouped.push(e);
-      }
-    });
 
-    var pointNodes = grouped.map(function(point) {
-
-
-    var pointNodes = this.props.data.map(function(point) {
-
-      var formRender = false,
-          savedPoint = false;
-      var classpoint = 'pointHolder';
-      if(point.editing == true) {
-        formRender = <PointForm cat={point.cat} title={point.title} lat={point.lat} lng={point.lng} editBubble={this.props.editBubble} newPoint={point.newPoint} id={point.id} onDelete={this.props.deleteBubble} saveNewPoint={this.props.updateBubble}/>;
-        classpoint = 'pointHolder currently-editing';
-      }
-      if(point.title !=false) {
-        savedPoint = <Point editBubble={this.props.editBubble} cat={point.cat} title={point.title} id={point.id} editing={point.editing} newPoint={point.newPoint}/>;
-      }
-      return (
-        <div key={point.id} className={classpoint}>
-          {savedPoint}
-          {formRender}
-        </div>
-      );
-    }.bind(this));*/
 
   }
 });

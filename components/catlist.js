@@ -3,8 +3,9 @@ var CatList = React.createClass({
   sortableOptions: {
     ref: 'catList',
     model: 'categoryList',
-    animation: 0,
-    filter: ".currently-editing"
+  //  filter: ".currently-editing"
+    animation: 100,
+
   },
   handleSort: function(evt, target) {
     var cats = this.state.categoryList;
