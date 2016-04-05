@@ -24,10 +24,15 @@ var CatItem = React.createClass({
     var style = {
       'backgroundColor': 'rgba('+rgb.r+','+rgb.g+','+rgb.b+',.3)'
     }
+    var handle = <div className="handle"></div>;
+    if(this.props.canDrag == false) {
+      handle = false;
+    }
 
     return (
       <div className="category-item" style={style}>
       {this.props.name}
+      {handle}
       <div className="category-controls">
         <button onClick={this.editClick}>Edit</button>
         <button onClick={this.deleteClick}>Delete</button>

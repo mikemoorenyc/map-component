@@ -50,3 +50,18 @@
 .category-block #cat-placeholder {
   display:block;
 }
+.category-item {
+  position:relative;
+}
+.category-item .handle {
+  display:block;
+  position:absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height:100%;
+}
+.category-item .category-controls {
+  position:relative;
+  display:inline-block;
+}

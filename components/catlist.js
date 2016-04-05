@@ -4,6 +4,7 @@ var CatList = React.createClass({
     ref: 'catList',
     model: 'categoryList',
   //  filter: ".currently-editing"
+    handle: '.handle',
     animation: 100,
 
   },
@@ -78,7 +79,7 @@ var CatList = React.createClass({
           catForm = <CatForm name={cat.name} color={cat.color} id={cat.id} newPoint={cat.newCat} deleteCat={this.props.deleteCat} saveCat={this.props.saveCat}/>
         }
         if(cat.name && !cat.editing) {
-          saveCat = <CatItem name={cat.name} color={cat.color} id={cat.id} deleteCat={this.props.deleteCat} saveCat={this.props.saveCat}/>
+          saveCat = <CatItem canDrag={draggable} name={cat.name} color={cat.color} id={cat.id} deleteCat={this.props.deleteCat} saveCat={this.props.saveCat}/>
         }
         return (
           <div className={mainCat} key={cat.id} >
