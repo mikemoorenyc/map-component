@@ -4,9 +4,15 @@ var CatList = React.createClass({
     ref: 'catList',
     model: 'categoryList',
   //  filter: ".currently-editing"
-    handle: '.handle',
+    handle: '.drag-handle',
     animation: 100,
 
+  },
+  handleStart: function() {
+    this.setState({dragging:true})
+  },
+  handleEnd: function() {
+    this.setState({dragging:false})
   },
   handleSort: function(evt, target) {
     var cats = this.state.categoryList;
@@ -49,14 +55,15 @@ var CatList = React.createClass({
       ordered.push(e);
     });
     return {
-      categoryList: ordered
+      categoryList: ordered,
+      dragging: false
     }
   },
   render: function() {
 
     //SET UP ADD A NEW
     var newCat = <div className="footer">
-                    <button onClick={this.props.newCat}>Add a new category</button>
+                    <button onClick={this.props.newCat} className="btn-class">Add category</button>
                   </div>;
     if(this.props.editState) {
       newCat = false;
@@ -92,7 +99,8 @@ var CatList = React.createClass({
     }
 
     return (
-      <div className='category-block' >
+      <div className='category-component' data-dragging={this.state.dragging}>
+        <h4>Categories</h4>
         <div className="category-list" ref="catList">
           {catList}
         </div>

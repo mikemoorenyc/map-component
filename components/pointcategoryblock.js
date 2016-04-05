@@ -67,6 +67,9 @@ componentWillReceiveProps: function(nextProps) {
 },
 
 render: function() {
+  if(this.state.points.length < 1) {
+    var hider = {display:'none'};
+  }
   var theList = this.state.points.map(function(point){
     var style = {
       borderLeft: '3px solid '+ point.color
@@ -87,7 +90,7 @@ render: function() {
       saveCat = <PointItem savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} id={point.id} cat={point.cat} lat={point.lat} lng={point.lng} title={point.title} />
     }
     return (
-      <div className={mainCat} key={point.id} style={style}>
+      <div className={mainCat} key={point.id}>
         {saveCat}
         {catForm}
 
@@ -95,7 +98,7 @@ render: function() {
     );
   }.bind(this));
   return(
-    <div className="category-block">
+    <div className="category-block" style={hider}>
     {theList}
     </div>
   )

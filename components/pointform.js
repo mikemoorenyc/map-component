@@ -129,8 +129,8 @@ var PointForm = React.createClass({
         <div id="map-container"></div>
         <div className="FormFooter">
 
-          <button className="cancel" onClick={this.cancelClick}>Cancel</button>
-          <button className="submit" onClick={this.publishClick} disabled={disabled}>{publishCopy}</button>
+          <button className="cancel btn-class secondary" onClick={this.cancelClick}>Cancel</button>
+          <button className="submit btn-class" onClick={this.publishClick} disabled={disabled}>{publishCopy}</button>
         </div>
 
       </div>
