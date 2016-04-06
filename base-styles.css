@@ -84,7 +84,7 @@ img {
 .category-component, .points-component {
   background: white;
   border-radius: 3px;
-  border:1px solid rgba(0,0,0,.2);
+  box-shadow: 0 0 5px rgba(0,0,0,.2);
   overflow:hidden;
 }
 .drag-handle {
@@ -213,13 +213,13 @@ img {
   left: 50%;
   top: 50%;
   transform:translate(-50%,-50%);
-  opacity: 0;
+  display:none;
 }
-.category-item:hover > .edit-bubble .icon {
-  opacity:1;
+.category-item > .edit-bubble .icon[data-hover="true"] {
+  display:block;
 }
 .sortable-chosen .category-item > .edit-bubble .icon {
-  opacity:0 !important;
+  display:none; !important;
 }
 .category-item > .edit-bubble .icon svg{
   display:block;
@@ -302,11 +302,77 @@ img {
 [data-dragging="true"] .category-item > .edit-bubble .icon, [data-dragging="true"] .drag-handle {
   display:none !important;
 }
-
+.point-form {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.points-component > .pointItem .point-form, {
+  border-bottom:0;
+}
 .point-form .FormFooter {
   padding: 15px;
   text-align: right;
 }
 .point-form .FormFooter button{
   margin-left:5px;
+}
+.point-form-header {
+  padding:15px;
+}
+.point-form-header .input-field {
+  float:left;
+  width: calc(50% - 10px);
+  margin-right:10px
+}
+.point-form-header .select-field {
+  float:left;
+  width: calc(50% - 10px);
+  margin-left:10px;
+  position:relative;
+}
+.point-form-header .select-field select {
+  position:absolute;
+  left: 0;
+  top: 0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+}
+.point-form-header .select-field .cat-name {
+  font-size: 18rem;
+  display:block;
+  width: 100%;
+  padding: 0 0 5px 0;
+  border-bottom:3px solid blue;
+  padding-right:40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position:relative;
+}
+.point-form-header .select-field .cat-name:after {
+  display:block;
+  line-height:1;
+  content:'\25E3';
+  font-size:14px;
+  position:absolute;
+  right: 5px;
+  top: 2px;
+  transform: rotate(-45deg);
+}
+
+.points-component .footer {
+  padding:15px;
+  text-align:right;
+}
+.category-block h4.cat-heading {
+  padding: 15px;
+  border-bottom:1px solid rgba(0,0,0,.1);
+  font-size:14rem;
+  color:rgba(0,0,0,.7);
+}
+.point-item {
+  position:relative;
+  padding:5px 15px;
+  border-bottom:1px solid rgba(0,0,0,.1);
 }

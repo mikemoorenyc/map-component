@@ -4,7 +4,7 @@ var PointList = React.createClass({
       return (
         <div className="points-component empty-state">
 
-          <img src="empty-map.png" />
+          <img src="empty-map.png" height="100"/>
           <div className="copy">
             <h4>Get Started</h4>
 
@@ -18,7 +18,7 @@ var PointList = React.createClass({
     }
 
     var addButton = <div className="footer">
-                      <button onClick={this.props.addAPoint} className="addPoint">Add a new map point</button>
+                      <button onClick={this.props.addAPoint} className="addPoint btn-class">new map point</button>
                     </div>;
     if(this.props.editState) {
       addButton = false;
@@ -49,13 +49,13 @@ var PointList = React.createClass({
     }.bind(this));
 
     var pointList = categoryBlocks.map(function(block){
-      return <PointCategoryBlock categories={this.props.categories} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} points={block.points} id={block.id} key={block.id} categoryBlocks={categoryBlocks} updatePoints={this.props.sortPoints}/>
+      return <PointCategoryBlock categories={this.props.categories} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} points={block.points} id={block.id} key={block.id} categoryBlocks={categoryBlocks} updatePoints={this.props.sortPoints} getCatColor={this.props.getCatColor} getCatName={this.props.getCatName}/>
     }.bind(this))
 
     var newPointItem = false;
     $(this.props.points).each(function(index,e){
       if(e.cat === false) {
-        newPointItem = <div className="pointItem currently-editing" ><PointForm title={e.title} lat={e.lat} lng={e.lng} newPoint={e.newPoint} cat={this.props.categories[0].id} id={e.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/></div>
+        newPointItem = <div className="pointItem currently-editing" ><PointForm title={e.title} lat={e.lat} lng={e.lng} newPoint={e.newPoint} cat={this.props.categories[0].id} catName={this.props.categories[0].name} id={e.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/></div>
       }
     }.bind(this))
 

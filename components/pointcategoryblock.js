@@ -67,27 +67,23 @@ componentWillReceiveProps: function(nextProps) {
 },
 
 render: function() {
+
   if(this.state.points.length < 1) {
     var hider = {display:'none'};
   }
   var theList = this.state.points.map(function(point){
-    var style = {
-      borderLeft: '3px solid '+ point.color
 
-    }
 
     var saveCat = false,
         catForm = false,
         mainCat = 'pointItem item-'+this.props.id;
     if(point.editing) {
-      style = {
-        background: '#ececec'
-      }
+
       mainCat = 'pointItem currently-editing item-'+this.props.id;
       catForm = <PointForm title={point.title} lat={point.lat} lng={point.lng} newPoint={point.newPoint} cat={point.cat} id={point.id} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} categories={this.props.categories}/>
     }
     if(point.title && !point.editing) {
-      saveCat = <PointItem savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} id={point.id} cat={point.cat} lat={point.lat} lng={point.lng} title={point.title} />
+      saveCat = <PointItem color={this.props.getCatColor(this.props.id)} savePoint={this.props.savePoint} deletePoint={this.props.deletePoint} id={point.id} cat={point.cat} lat={point.lat} lng={point.lng} title={point.title} />
     }
     return (
       <div className={mainCat} key={point.id}>
@@ -99,6 +95,7 @@ render: function() {
   }.bind(this));
   return(
     <div className="category-block" style={hider}>
+    <h4 className="cat-heading" dangerouslySetInnerHTML={{__html:this.props.getCatName(this.props.id)}}></h4>
     {theList}
     </div>
   )

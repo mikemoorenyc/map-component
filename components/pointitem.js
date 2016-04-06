@@ -17,7 +17,7 @@ var PointItem = React.createClass({
 
 
     return (
-      <div className="point-item">
+      <div className="point-item"style={{borderLeft: '3px solid '+this.props.color}}>
       {this.props.title}
       <div className="category-controls">
         <button onClick={this.editClick}>Edit</button>

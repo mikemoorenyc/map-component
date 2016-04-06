@@ -96,7 +96,7 @@ var MapComponent = React.createClass({
 
     if(saved === true) {
       if(this.state.categories.length < 2) {
-        alert("You need to have at least 1 category.");
+        alert("You need to have at least one category.");
         return;
       }
       var cancel;
@@ -162,6 +162,28 @@ var MapComponent = React.createClass({
       points: newOrder
     });
   },
+  getCatColor: function(id) {
+    var catName = '';
+    $(this.state.categories).each(function(index,e){
+      var cat = e;
+      if(id ==e.id) {
+
+        catName =  e.color;
+      }
+    }.bind(this));
+    return catName;
+  },
+  getCatName: function(id) {
+    var catName = '';
+    $(this.state.categories).each(function(index,e){
+      var cat = e;
+      if(id ==e.id) {
+
+        catName =  e.name;
+      }
+    }.bind(this));
+    return catName;
+  },
   render: function() {
     var scaffold;
     var editState = false;
@@ -175,7 +197,7 @@ var MapComponent = React.createClass({
     } else {
       scaffold = <div className="clearfix">
                     <CatList updateCat={this.updateCat} deleteCat={this.deleteCat} newCat={this.addACat} editState={editState} saveCat={this.setCat} cat={this.state.categories}/>
-                    <PointList savePoint={this.updatePoint} addAPoint={this.addAPoint} deletePoint={this.deletePoint} points={this.state.points} categories={this.state.categories} editState={editState} sortPoints={this.sortPoints}/>
+                    <PointList savePoint={this.updatePoint} addAPoint={this.addAPoint} deletePoint={this.deletePoint} points={this.state.points} categories={this.state.categories} editState={editState} sortPoints={this.sortPoints} getCatColor={this.getCatColor} getCatName={this.getCatName}/>
 
                   </div>;
     }

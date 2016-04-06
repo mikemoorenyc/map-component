@@ -1,5 +1,26 @@
 var PointForm = React.createClass({
+  getCatName: function(value) {
+    var catName = '';
+    $(this.props.categories).each(function(index,e){
+      var cat = e;
+      if(value ==e.id) {
 
+        catName =  e.name;
+      }
+    }.bind(this));
+    return catName;
+  },
+  getCatColor: function(value) {
+    var catName = '';
+    $(this.props.categories).each(function(index,e){
+      var cat = e;
+      if(value ==e.id) {
+
+        catName =  e.color;
+      }
+    }.bind(this));
+    return catName;
+  },
   getInitialState: function() {
 
     if(!(this.props.lat)) {
@@ -17,9 +38,11 @@ var PointForm = React.createClass({
       title: this.props.title,
       cat: this.props.cat,
       lat: lat,
-      lng: lng
+      lng: lng,
+      catName: this.getCatName(this.props.cat)
     }
   },
+
   componentDidMount: function() {
     var initialCenter = new google.maps.LatLng(this.state.lat,this.state.lng);
     $('#map-container').append($('#theMap'));
@@ -88,7 +111,7 @@ var PointForm = React.createClass({
       this.setState({title: e.target.value});
   },
   updateCat: function(e) {
-    this.setState({cat: e.target.value});
+    this.setState({cat: e.target.value, catName: this.getCatName(e.target.value)});
   },
   publishClick: function(e) {
 
@@ -112,20 +135,31 @@ var PointForm = React.createClass({
     if(!this.props.newPoint) {
       publishCopy = 'Update';
     }
+
     return (
       <div className="point-form">
-        <label>Point Name</label>
-        <input type="text" value={this.state.title} onChange={this.updateTitle}/>
-        <br/>
-        <select defaultValue={this.state.cat} onChange={this.updateCat}>
-        {
-          this.props.categories.map(function (cat) {
-            return (
-              <option value={cat.id} key={cat.id} dangerouslySetInnerHTML={{__html:cat.name}}></option>
-            )
-          })
-        }
-        </select>
+        <div className="point-form-header clearfix">
+          <div className="input-field" data-empty={disabled}>
+            <input type="text"  placeholder="Point Name" value={this.state.title} onChange={this.updateTitle}/>
+          </div>
+          <div className="select-field">
+          <div className="cat-name" style={{borderColor: this.getCatColor(this.state.cat)}}>
+            <span dangerouslySetInnerHTML={{__html:this.state.catName}}></span>
+          </div>
+          <select defaultValue={this.state.cat} onChange={this.updateCat}>
+          {
+            this.props.categories.map(function (cat) {
+              return (
+                <option value={cat.id} key={cat.id} dangerouslySetInnerHTML={{__html:cat.name}}></option>
+              )
+            })
+          }
+          </select>
+          </div>
+
+        </div>
+
+
         <div id="map-container"></div>
         <div className="FormFooter">
 
