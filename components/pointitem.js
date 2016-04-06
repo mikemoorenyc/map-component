@@ -14,11 +14,19 @@ var PointItem = React.createClass({
     })
   },
   render: function() {
-
+    var handle = <div className="drag-handle">
+                    <div className="icon">
+                      <hr/>
+                    </div>
+                  </div>;
+    if(this.props.canDrag == false) {
+      handle = false;
+    }
 
     return (
       <div className="point-item"style={{borderLeft: '3px solid '+this.props.color}}>
       {this.props.title}
+      {handle}
       <div className="category-controls">
         <button onClick={this.editClick}>Edit</button>
         <button onClick={this.deleteClick}>Delete</button>

@@ -4,24 +4,7 @@ var MapComponent = React.createClass({
    return {
      currentlyEditing: false,
      points: [],
-     categories: [
-       {
-         id: 1,
-         name: 'Test 1',
-         color: '#cc0000',
-       },
-       {
-         id: 2,
-         name: 'Test 2',
-         color: '#ececec',
-       },
-       {
-         id:3,
-         name: 'Test 3',
-         color: '#0000cc'
-       }
-
-     ]
+     categories: []
    };
   },
   randomColor: function() {
@@ -53,7 +36,7 @@ var MapComponent = React.createClass({
     var currentPoints = this.state.points;
     var newPoints = currentPoints.concat([
       {
-        id: this.idGenerator(currentPoints),
+        id: idGenerator(currentPoints),
         title:'',
         editing: true,
         newPoint: true,
@@ -223,9 +206,10 @@ var MapComponent = React.createClass({
   }
 });
 
-
+/*
 
 ReactDOM.render(
   <MapComponent />,
   document.getElementById('map-component')
 );
+*/

@@ -65,7 +65,7 @@ img {
 
 
 .category-component {
-  float:right;
+
   width:300px;
   padding-left:15px;
 }
@@ -78,7 +78,7 @@ img {
 }
 .points-component {
 
-  float:left;
+
   width: calc(100% - 315px);
 }
 .category-component, .points-component {
@@ -375,4 +375,11 @@ img {
   position:relative;
   padding:5px 15px;
   border-bottom:1px solid rgba(0,0,0,.1);
+}
+
+
+/* NEW STUFF */
+.points-component[data-editing="true"] .pointItem:not(.currently-editing), .categories-component[data-editing="true"] .categoryItem:not(.currently-editing) {
+  pointer-events: none;
+  opacity:.25;
 }

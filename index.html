@@ -14,7 +14,7 @@
     <link href="base-styles.css" rel="stylesheet">
   </head>
   <body>
-    
+
     <!--
 <h3>Still to do</h3>
 <ul>
@@ -40,7 +40,13 @@
       </div>
 
     </div>
+    <div class="map-wrapper clearfix">
+      <div id="points-component"></div>
+      <div id="categories-component"></div>
+
+    </div>
     <div id="cat-placeholder"></div>
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -50,24 +56,50 @@
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script>
-
-    var mapCategories = [
+    var APP = {};
+    var INITIALPOINTS = [];
+    var INITIALCATEGORIES = [
       {
-        slug: 'retail',
-        title: "Retail",
-        color: 'red'
+        id: 1,
+        name: 'Test 1',
+        color: '#cc0000',
       },
       {
-        slug: 'hotelsclubs',
-        title: 'Hotels &amp; Clubs',
-        color: 'blue'
+        id: 2,
+        name: 'Test 2',
+        color: '#ececec',
       },
       {
-        slug: 'restaurants',
-        title: 'Restaurants',
-        color: 'yellow'
+        id:3,
+        name: 'Test 3',
+        color: '#0000cc'
       }
+
     ];
+
+    //GLOBAL FUNCTIONS
+    function orderer(items) {
+      var ordered = [];
+      $(items).each(function(index,e){
+        e.order = index;
+        ordered.push(e);
+      });
+      return ordered;
+    }
+    function idGenerator(items) {
+      var newID = 1;
+      if(items.length > 0) {
+        var highNum = 0;
+
+        $(items).each(function(index, e){
+          if(e.id > highNum) {
+            highNum = e.id;
+          }
+        });
+        newID = highNum+1;
+      }
+      return newID;
+    }
 
     var center = new google.maps.LatLng(40.7067279,-74.0397625);
       var mapOptions = {
@@ -110,5 +142,6 @@ placeholder.className = 'cat-placeholder';
     </script>
     <script src="react-sort.js"></script>
     <script src="build/build.js"></script>
+
   </body>
 </html>

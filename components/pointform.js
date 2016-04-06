@@ -101,8 +101,10 @@ var PointForm = React.createClass({
     } else {
       this.props.savePoint({
         id: this.props.id,
-        title: this.state.title,
-        cat: this.state.cat,
+        title: this.props.title,
+        cat: this.props.cat,
+        lat: this.props.lat,
+        lng: this.props.lng,
         editing: false
       });
     }

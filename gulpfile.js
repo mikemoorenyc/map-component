@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     eslint = require('gulp-eslint');
 
 gulp.task('react',   function () {
-	return gulp.src(['components/*.js','app.js'])
+	return gulp.src(['components/*.js','app.js', 'runner.js'])
     .pipe(concat('build.js'))
 		.pipe(babel({
 			presets: ['es2015', 'react']
