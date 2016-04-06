@@ -18,7 +18,7 @@ var PointList = React.createClass({
     }
 
     var addButton = <div className="footer">
-                      <button onClick={this.props.addAPoint} className="addPoint btn-class">new map point</button>
+                      <button onClick={this.props.addAPoint} className="addPoint btn-class">add map point</button>
                     </div>;
     if(this.props.editState) {
       addButton = false;
